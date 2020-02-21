@@ -63,6 +63,11 @@ class AppointmentController {
             });
         }
 
+        if (req.userId === provider_id) {
+            return res.status(401).json({
+                error: 'You cannot make appointments with yourself.',
+            });
+        }
         /*
          *
          * Check for past dates
