@@ -12,6 +12,11 @@ class SessionController {
                 .required(),
             password: Yup.string().required(),
         });
+
+        if (!(await schema.isValid(req.body))) {
+            return res.status(400).json({ error: 'Validation failed' });
+          }
+
         const { email, password } = req.body;
 
         const user = await User.findOne({ where: { email } });
@@ -21,7 +26,7 @@ class SessionController {
         }
 
         if (!(await user.checkPassword(password))) {
-            return res.status(401).json({ error: 'Passoord does not match.' });
+            return res.status(401).json({ error: 'Password does not match.' });
         }
 
         const { id, name } = user;
