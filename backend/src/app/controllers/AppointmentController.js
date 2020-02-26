@@ -14,7 +14,7 @@ class AppointmentController {
         const { page = 1 } = req.query;
 
         const appointments = await Appointment.findAll({
-            where: { user_id: req.userId, canceled_at: null },
+            where: { user_id: req.userId, cancelled_at: null },
             order: ['date'],
             attributes: ['id', 'date', 'past', 'cancelable'],
             limit: 20,
@@ -94,7 +94,7 @@ class AppointmentController {
         const checkAvailability = await Appointment.findOne({
             where: {
                 provider_id,
-                canceled_at: null,
+                cancelled_at: null,
                 date: hourStart,
             },
         });
@@ -143,9 +143,9 @@ class AppointmentController {
                 {
                     model: User,
                     as: 'user',
-                    attributes: ['name']
-                }
-            ]
+                    attributes: ['name'],
+                },
+            ],
         });
 
         if (appointment.user_id !== req.userId) {
@@ -163,7 +163,7 @@ class AppointmentController {
             });
         }
 
-        appointment.canceled_at = new Date();
+        appointment.cancelled_at = new Date();
 
         await appointment.save();
 
